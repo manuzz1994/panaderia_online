@@ -35,10 +35,31 @@ class Producto(models.Model):
     #        self.slug = slugify(self.nombre)
     #    super().save(*args, **kwargs)
     def __str__(self):
-        return f"{self.nombre} - ${self.precio}"
+        return f"{self.nombre}"
     
     class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         ordering = ['categoria__nombre', 'nombre', 'precio', 'disponible']
+        
+class VarianteProducto(models.Model):
+    producto = models.ForeignKey(
+        Producto,
+        on_delete=models.CASCADE,
+        related_name='variantes')
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True, null=True)
+    precio_extra = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    disponible = models.BooleanField(default=True)
+    es_default = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.nombre} (${self.precio_total()})"
+    
+    def precio_total(self):
+        return self.producto.precio + self.precio_extra
+    
+    class Meta:
+        unique_together = ('producto', 'nombre')  # Evita variantes duplicadas para el mismo producto
+        ordering = ['-es_default', 'precio_extra', 'nombre']
     
