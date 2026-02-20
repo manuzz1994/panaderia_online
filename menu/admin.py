@@ -54,7 +54,7 @@ class ProductoAdmin(admin.ModelAdmin):
     
 @admin.register(VarianteProducto)
 class VarianteProductoAdmin(admin.ModelAdmin):
-    list_display = ('producto', 'nombre', 'precio_extra','precio_total', 'disponible', 'es_default')
+    list_display = ('nombre', 'producto', 'precio_extra','precio_total', 'disponible', 'es_default')
     list_filter = ('disponible', 'es_default', 'producto__categoria')
     search_fields = ('nombre', 'producto__nombre')
     list_editable = ('precio_extra', 'disponible', 'es_default')

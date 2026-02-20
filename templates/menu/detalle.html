@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'productos_por_categoria' producto.categoria.id %}">
+            {{ producto.categoria.nombre }}
+        </a></li>
+        <li class="breadcrumb-item active">{{ producto.nombre }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-6">
+        {% if producto.imagen %}
+        <img src="{{ producto.imagen.url }}" class="img-fluid rounded" alt="{{ producto.nombre }}">
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1>{{ producto.nombre }}</h1>
+        <p class="lead">{{ producto.descripcion }}</p>
+        
+        <form method="post" action="{% url 'agregar_al_carrito' %}">
+            {% csrf_token %}
+            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+            
+            {% if variantes %}
+            <div class="mb-3">
+                <label class="form-label">Variante:</label>
+                {% for variante in variantes %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="variante_id" 
+                           id="variante{{ variante.id }}" value="{{ variante.id }}"
+                           {% if variante.es_default %}checked{% endif %}>
+                    <label class="form-check-label" for="variante{{ variante.id }}">
+                        {{ variante.nombre }} - 
+                        <strong>${{ variante.precio_total }}</strong>
+                        {% if variante.precio_extra > 0 %}
+                        <small class="text-muted">(+${{ variante.precio_extra }} extra)</small>
+                        {% endif %}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="mb-3">
+                <label for="cantidad" class="form-label">Cantidad:</label>
+                <input type="number" class="form-control" id="cantidad" name="cantidad" 
+                       value="1" min="1" style="width: 100px;">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-lg">
+                Agregar al carrito
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
