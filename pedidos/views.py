@@ -8,7 +8,26 @@ def agregar_al_carrito(request):
         variante_id = request.POST.get('variante_id')
         cantidad = int(request.POST.get('cantidad', 1))
         
-        # Aquí irá la lógica del carrito (usando sesiones)
-        messages.success(request, f"Producto agregado (simulación)")
+        # Obtener productos y variantes
+        producto = get_object_or_404(Producto, id=producto_id, disponible=True)
+        variante = None
+        precio_unitario = producto.precio
+
+        if variante_id:
+            variante = get_object_or_404(VarianteProducto, id=variante_id, disponible=True)
+            precio_unitario = producto.precio_total()
+
+        # Inicializar carrito en sesión si no existe
+        if 'carrito' not in request.session:
+            request.session['carrito'] = {}
         
+        carrito = request.session['carrito']
+
+        item_key = str(producto_id)
+        if variante_id:
+            item_key += f"_{variante_id}"
+
+        # 
+
+
     return redirect('inicio')
