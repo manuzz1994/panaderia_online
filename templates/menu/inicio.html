@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Nuestras especialidades</h1>
+
+<div class="row">
+    {% for categoria in categorias %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ categoria.nombre }}</h5>
+                <p class="card-text">{{ categoria.descripcion|truncatechars:100 }}</p>
+                <a href="{% url 'productos_por_categoria' categoria.id %}" class="btn btn-primary">
+                    Ver productos →
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay categorías disponibles</p>
+    {% endfor %}
+</div>
+{% endblock %}
