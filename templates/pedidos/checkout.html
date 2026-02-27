@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">📦 Finalizar pedido</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Resumen del pedido</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Variante</th>
+                            <th>Cant.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, item in carrito.items %}
+                        <tr>
+                            <td>{{ item.producto_nombre }}</td>
+                            <td>{{ item.variante_nombre|default:"-" }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>${{ item.subtotal }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="text-end">Total:</th>
+                            <th>${{ total }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Datos de entrega</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'confirmar_pedido' %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Método de entrega:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="metodo_entrega" id="retiro" value="retiro" checked>
+                            <label class="form-check-label" for="retiro">
+                                Retiro en local
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="metodo_entrega" id="delivery" value="delivery">
+                            <label class="form-check-label" for="delivery">
+                                Delivery a domicilio
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección (solo para delivery):</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Calle y número">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono de contacto:</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Método de pago:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="metodo_pago" id="efectivo" value="efectivo" checked>
+                            <label class="form-check-label" for="efectivo">
+                                Efectivo (al retirar/recibir)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="metodo_pago" id="transferencia" value="transferencia">
+                            <label class="form-check-label" for="transferencia">
+                                Transferencia bancaria (MercadoPago)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        Confirmar pedido
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Información</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Horario de atención:</strong><br>
+                Lunes a sábados: 8:00 - 22:00<br>
+                Domingos: 9:00 - 14:00</p>
+                
+                <p><strong>Delivery:</strong><br>
+                Costo: $500 (a confirmar)</p>
+                
+                <p><strong>Dirección local:</strong><br>
+                Av. Siempre Viva 123</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

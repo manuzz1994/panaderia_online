@@ -10,6 +10,16 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'inicio' %}">🥖 Panadería Online</a>
+            <div class="ms-auto">
+                <a href="{% url 'ver_carrito' %}" class="btn btn-outline-light position-relative">
+                    🛒 Carrito
+                    {% if carrito_total_items > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ carrito_total_items }}
+                    </span>
+                    {% endif %}
+                </a>
+            </div>
         </div>
     </nav>
 
